@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="shortcut icon" type="image/png" href="img/travelLogo.png" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"><link/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="style.css"></link>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <title>weather or not &mdash; ruin proof plans</title>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <img src="img/travelLogo.png" alt="" class="logo" />
+        <form action="#" class="search">
+          <input
+            type="text"
+            class="search__input"
+            placeholder="Search Cities"
+          />
+          <button class="search__button">
+            <svg class="search__icon">
+              <use xlink:href="img/sprite.svg#icon-magnifying-glass"></use>
+            </svg>
+          </button>
+        </form>
+        <div class="user-nav">
+          <div class="user-nav__weather">Weather</div>
+          <div class="user-nav__or-not">Or Not</div>
+        </div>
+      </header>
+      <div class="content">
+        <nav class="sidebar">
+          <ul class="past-searches">
+            <li class="past-searches__item">
+              <a href="#" class="past-searches__link" onClick="(getWeather(this.innerHTML))">
+              </a>
+            </li>
+            <!--
+            <li class="past-searches__item">
+              <a href="#" class="past-searches__link" onClick="(console.log(this.innerHTML.trim()))">
+                Hello
+              </a>
+            </li>
+            <li class="past-searches__item">
+              <a href="#" class="past-searches__link" onClick="(console.log(this.innerHTML.trim()))">
+                Hello
+              </a>
+            </li> -->
+          </ul>
+          <div class="legal">Goodbye</div>
+        </nav>
+        <main class="hotel-view">
+          <div class="gallery">
+            <figure class="gallery__item">
+              <img src="img/hotel-1.jpg" alt="Photo of Hotel 1" class="gallery__photo gallery__photo__1">
+            </figure>
+            <figure class="gallery__item">
+              <img src="img/hotel-2.jpg" alt="Photo of Hotel 2" class="gallery__photo gallery__photo__2">
+            </figure>
+            <figure class="gallery__item">
+              <img src="img/hotel-3.jpg" alt="Photo of Hotel 3" class="gallery__photo gallery__photo__3">
+            </figure>
+          </div>
+
+          <div class="overview">
+            <h1 class="overview__headline">
+            </h1>
+
+
+            <div class="overview__temperature">
+              
+            </div>
+
+            <div class="overview__description">
+              
+            </div>
+
+
+            <div class="overview__humidity">
+              Search
+            </div>
+
+            <div class="overview__wind">
+              For
+            </div> 
+
+            <div class="overview__UV">
+              <div class="overview__UV--index">
+                cities
+              </div>
+              <div class="overview__UV--text">
+              </div>
+            </div>
+          </div>
+          <div class="today-notes">             
+            <textarea onchange="setNotesLocalStorage()"  class="today-notes__search today" cols='60' rows='8' placeholder="Today's notes"></textarea>
+
+          </div>
+
+          <div class="five-day">
+            <div class="five-day__days five-day__3">
+              Each Day
+            </div>
+            
+            <div class="five-day__notes">
+              <textarea onchange="setNotesLocalStorage()" class="today-notes__search day--1" cols='60' rows='8' placeholder="Tomorrow's notes"></textarea>
+            </div>
+          </div>
+          <div class="five-day">
+            <div class="five-day__days five-day__11">
+              Each Day
+            </div>
+            <div class="five-day__notes">
+              <textarea onchange="setNotesLocalStorage()" class="today-notes__search day--2" cols='60' rows='8' placeholder="The day after that's notes"></textarea>
+            </div>
+          </div>
+          <div class="five-day">
+            <div class="five-day__days five-day__19">
+              Each Day
+            </div>
+            <div class="five-day__notes">
+              <textarea onchange="setNotesLocalStorage()" class="today-notes__search day--3" cols='60' rows='8' placeholder="And the day after that's notes"></textarea>
+            </div>
+          </div>
+          <div class="five-day">
+            <div class="five-day__days five-day__27">
+              Each Day
+            </div>
+            <div class="five-day__notes">
+              <textarea onchange="setNotesLocalStorage()" class="today-notes__search day--4" cols='60' rows='8' placeholder="And the day after that's notes"></textarea>
+            </div>
+          </div>
+          <div class="five-day">
+            <div class="five-day__days five-day__35">
+              Each Day
+            </div>
+            <div class="five-day__notes">
+              <textarea onchange="setNotesLocalStorage()" class="today-notes__search day--5" cols='60' rows='8' placeholder="And the day after that's notes"></textarea>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="script.js"></script>
+
+  </body>
+</html>
