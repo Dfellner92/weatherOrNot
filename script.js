@@ -52,7 +52,7 @@ function getWeather(userInput) {
     feelslike = response.main.temp;
     feelslike = (feelslike - 273.15) * 1.8 + 32;
     feelslike = Math.floor(feelslike);
-    $(".overview__temperature").html(`${feelslike}`);
+    $(".overview__temperature").html(`${feelslike} °F`);
     humidity = response.main.humidity;
     $(".overview__humidity").html(`${humidity} humidity`);
     wind = response.wind.speed;
