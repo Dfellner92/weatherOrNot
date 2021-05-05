@@ -1,5 +1,10 @@
 let userInput;
 let latestSearch = localStorage.getItem("latest search");
+let pastSearchDiv = `<li class="past-searches__item">
+<a href="#" onClick="getWeather(this.innerHTML)" class="past-searches__link" >
+  ${userInput}
+</a>
+</li>`;
 
 document.addEventListener("DOMContentLoaded", function () {
   getWeather(latestSearch);
@@ -11,18 +16,21 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector(".day--5").value = localStorage.getItem("day-5");
   document.querySelector(".past-searches__link").innerHTML = latestSearch;
 
-  $(".search__button").on("click", function (e) {
-    e.preventDefault();
-    userInput = $(".search__input").val().trim();
-    console.log(userInput);
-    localStorage.setItem("latest search", userInput);
-    $(".past-searches").prepend(`<li class="past-searches__item">
-    <a href="#" onClick="getWeather(this.innerHTML)" class="past-searches__link" >
-      ${userInput}
-    </a>
-    </li>`);
-    getWeather(userInput);
-  });
+  document
+    .querySelector(".search__button")
+    .addEventListener("click", function (e) {
+      e.preventDefault();
+      userInput = document.querySelector(".search__input").value;
+      localStorage.setItem("latest search", userInput);
+      var li = document.createElement("li");
+      li.innerHTML = `<li class="past-searches__item">
+      <a href="#" onClick="getWeather(this.innerHTML)" class="past-searches__link" >
+        ${userInput}
+      </a>
+      </li>`;
+      document.querySelector(".past-searches").appendChild(li);
+      getWeather(userInput);
+    });
   setNotesLocalStorage();
 });
 
