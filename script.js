@@ -5,6 +5,8 @@ let pastSearchDiv = `<li class="past-searches__item">
   ${userInput}
 </a>
 </li>`;
+let count = 0;
+let d1 = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
   getWeather(latestSearch);
@@ -57,10 +59,12 @@ function getWeather(userInput) {
     lat = response.coord.lat;
     lon = response.coord.lon;
     $(".overview__headline").html(`${city}`);
+    let date = moment().format("MM / DD / YYYY");
+    $(".overview__date").html(date);
     feelslike = response.main.temp;
     feelslike = (feelslike - 273.15) * 1.8 + 32;
     feelslike = Math.floor(feelslike);
-    $(".overview__temperature").html(`${feelslike} °F`);
+    $(".overview__temperature").html(`${feelslike}°F`);
     humidity = response.main.humidity;
     $(".overview__humidity").html(`${humidity} humidity`);
     wind = response.wind.speed;
@@ -131,6 +135,7 @@ function getFiveDay(userInput) {
     method: "GET",
   }).then(function (response) {
     console.log(response);
+    var count = 1;
 
     for (i = 3; i < response.list.length; i += 8) {
       console.log(response.list[i].main.temp);
@@ -140,6 +145,7 @@ function getFiveDay(userInput) {
       console.log(temp);
       var humidity = response.list[i].main.humidity;
       var description = response.list[i].weather[0].description;
+      d1 = moment().add(count, "days").startOf("day").format("MM / DD / YYYY");
       var svg = "";
       if (description === "clear sky") {
         svg = "light-up";
@@ -160,7 +166,9 @@ function getFiveDay(userInput) {
       document.querySelector(
         `.five-day__${i}`
       ).innerHTML = `<svg class="five-day__days--icon"><use xlink:href="img/sprite.svg#icon-${svg}"></use></svg>
-      ${temp} °F, ${description}`;
+        ${d1}, ${temp} °F, ${description}`;
+      count++;
+      console.log(count);
     }
 
     var averageTemp = 0;
