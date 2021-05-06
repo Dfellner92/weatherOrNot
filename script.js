@@ -1,12 +1,29 @@
 let userInput;
 let latestSearch = localStorage.getItem("latest search");
-let pastSearchDiv = `<li class="past-searches__item">
-<a href="#" onClick="getWeather(this.innerHTML)" class="past-searches__link" >
-  ${userInput}
-</a>
-</li>`;
+let li = document.createElement("li");
 let count = 0;
 let d1 = 0;
+let apiCall = "";
+let apiKey = "4e5dbe7db2b5e9c8b47fa40b691443d5";
+let currentConditions =
+  "https://api.openweathermap.org/data/2.5/weather?appid=";
+let apiCall2 = "";
+let currentConditions2 = "https://api.openweathermap.org/data/2.5/uvi?appid=";
+let apiCall3 = "";
+let currentConditions3 = "https://api.openweathermap.org/data/2.5/forecast?q=";
+let date;
+let city;
+let feelslike;
+let humidity;
+let wind;
+let lat;
+let lon;
+let temp2;
+
+let uvI;
+let uvIcolor;
+
+var svg = "";
 
 document.addEventListener("DOMContentLoaded", function () {
   getWeather(latestSearch);
@@ -36,79 +53,45 @@ document.addEventListener("DOMContentLoaded", function () {
   setNotesLocalStorage();
 });
 
-var apiCall = "";
-var apiKey = "4e5dbe7db2b5e9c8b47fa40b691443d5";
-var currentConditions =
-  "https://api.openweathermap.org/data/2.5/weather?appid=";
-var city;
-var feelslike;
-var humidity;
-var wind;
-var lat;
-var lon;
-
-function getWeather(userInput) {
+const getWeather = (userInput) => {
   apiCall = currentConditions + apiKey + "&q=" + userInput;
 
   $.ajax({
     url: apiCall,
     method: "GET",
   }).then(async function (response) {
-    console.log(response);
     city = response.name;
     lat = response.coord.lat;
     lon = response.coord.lon;
-    $(".overview__headline").html(`${city}`);
-    let date = moment().format("MM / DD / YYYY");
-    $(".overview__date").html(date);
+    document.querySelector(".overview__headline").innerHTML = city;
+    date = moment().format("MM / DD / YYYY");
+    document.querySelector(".overview__date").innerHTML = date;
     feelslike = response.main.temp;
     feelslike = (feelslike - 273.15) * 1.8 + 32;
     feelslike = Math.floor(feelslike);
-    $(".overview__temperature").html(`${feelslike}°F`);
+    document.querySelector(
+      ".overview__temperature"
+    ).innerHTML = `${feelslike}°F`;
     humidity = response.main.humidity;
-    $(".overview__humidity").html(`${humidity} humidity`);
+    document.querySelector(".overview__humidity").innerHTML = `${humidity}%`;
     wind = response.wind.speed;
-    $(".overview__wind").html(`${wind} mph`);
-    $(".overview__description").html(response.weather[0].description);
-
-    if (response.weather[0].description == "overcast clouds") {
-      $(".gallery__photo__1").attr("src", "./img/overcast-clouds-1.jpeg");
-      $(".gallery__photo__2").attr("src", "./img/overcast-clouds-2.jpeg");
-      $(".gallery__photo__3").attr("src", "./img/overcast-clouds-3.jpeg");
-    } else if (response.weather[0].description == "light rain") {
-      $(".gallery__photo__1").attr("src", "./img/light-rain-1.jpeg");
-      $(".gallery__photo__2").attr("src", "./img/light-rain-2.jpeg");
-      $(".gallery__photo__3").attr("src", "./img/light-rain-3.jpeg");
-    } else if (response.weather[0].description == "clear sky") {
-      $(".gallery__photo__1").attr("src", "./img/clear-sky-1.jpeg");
-      $(".gallery__photo__2").attr("src", "./img/clear-sky-2.jpeg");
-      $(".gallery__photo__3").attr("src", "./img/clear-sky-3.jpeg");
-    } else if (
-      response.weather[0].description == "broken clouds" ||
-      response.weather[0].description == "scattered clouds"
-    ) {
-      $(".gallery__photo__1").attr("src", "./img/scattered-clouds-1.jpeg");
-      $(".gallery__photo__2").attr("src", "./img/scattered-clouds-2.jpeg");
-      $(".gallery__photo__3").attr("src", "./img/scattered-clouds-3.jpeg");
-    } else if (response.weather[0].description == "few clouds") {
-      $(".gallery__photo__1").attr("src", "./img/few-clouds-1.jpeg");
-      $(".gallery__photo__2").attr("src", "./img/few-clouds-2.jpeg");
-      $(".gallery__photo__3").attr("src", "./img/few-clouds-3.jpeg");
-    }
-
+    document.querySelector(".overview__wind").innerHTML = `${wind} mph`;
+    document.querySelector(".overview__description").innerHTML =
+      response.weather[0].description;
+    picturesSelection(response.weather[0].description);
     getUVI();
     getFiveDay(userInput);
   });
-}
+};
 
-function getUVI() {
-  var queryURL2 = `https://api.openweathermap.org/data/2.5/uvi?appid=${apiKey}&lat=${lat}&lon=${lon}`;
+const getUVI = () => {
+  apiCall2 = currentConditions2 + apiKey + `&lat=${lat}&lon=${lon}`;
+
   $.ajax({
-    url: queryURL2,
+    url: apiCall2,
     method: "GET",
   }).then(function (res) {
-    var uvI = res.value;
-    var uvIcolor;
+    uvI = res.value;
 
     if (uvI >= 0 && uvI < 3) {
       uvIcolor = "green";
@@ -121,32 +104,30 @@ function getUVI() {
     } else {
       uvIcolor = "violet";
     }
-    $(".overview__UV--index").html(`${uvI}`);
-    $(".overview__UV--text").html("UVI");
-    $(".overview__UV").css("background-color", `${uvIcolor}`);
-  });
-}
 
-function getFiveDay(userInput) {
-  var queryURL3 = `https://api.openweathermap.org/data/2.5/forecast?q=${userInput}&appid=${apiKey}`;
+    document.querySelector(".overview__UV--index").innerHTML = uvI;
+    document.querySelector(".overview__UV--text").innerHTML = "UVI";
+    document.querySelector(".overview__UV").style.backgroundColor = uvIcolor;
+  });
+};
+
+const getFiveDay = (userInput) => {
+  apiCall3 = currentConditions3 + `${userInput}&appid=${apiKey}`;
 
   $.ajax({
-    url: queryURL3,
+    url: apiCall3,
     method: "GET",
   }).then(function (response) {
-    console.log(response);
-    var count = 1;
+    count = 1;
 
     for (i = 3; i < response.list.length; i += 8) {
-      console.log(response.list[i].main.temp);
-      var temp = response.list[i].main.temp;
-      temp = (temp - 273.15) * 1.8 + 32;
-      temp = Math.floor(temp);
-      console.log(temp);
+      temp2 = response.list[i].main.temp;
+      temp2 = (temp2 - 273.15) * 1.8 + 32;
+      temp2 = Math.floor(temp2);
       var humidity = response.list[i].main.humidity;
-      var description = response.list[i].weather[0].description;
+      description = response.list[i].weather[0].description;
       d1 = moment().add(count, "days").startOf("day").format("MM / DD / YYYY");
-      var svg = "";
+
       if (description === "clear sky") {
         svg = "light-up";
       } else if (
@@ -166,71 +147,77 @@ function getFiveDay(userInput) {
       document.querySelector(
         `.five-day__${i}`
       ).innerHTML = `<svg class="five-day__days--icon"><use xlink:href="img/sprite.svg#icon-${svg}"></use></svg>
-        ${d1}, ${temp} °F, ${description}`;
+        ${d1}, ${temp2} °F, ${description}`;
       count++;
-      console.log(count);
     }
-
-    var averageTemp = 0;
-    var previousdate = "";
-    var count = 0;
-    var results = 0;
-    previousdate = moment().format("MM/DD/YYYY");
-    // for (i = 0; i < response.list.length; i++) {
-    //   var currentDate = moment(response.list[i].dt, "X").format("MM/DD/YYYY");
-    var temp = response.list[i].main.temp;
-    temp = (temp - 273.15) * 1.8 + 32;
-    temp = Math.floor(temp);
-    //   let humidity = response.list[i].main.humidity;
-    //   console.log(currentDate);
-    //   console.log(temp);
-
-    // if (previousdate === currentDate) {
-    //   averageTemp = averageTemp + temp;
-    //   count++;
-    //   previousdate = currentDate;
-    // } else {
-    //   results = averageTemp / count;
-    //   results = Math.floor(results);
-    //   console.log("results:", results);
-    //   var card = $("<div class = 'card m-1 p-1 col-sm-2'>");
-
-    //   var div1 = $("<div class= 'card-header'>");
-    //   div1.append(currentDate);
-    //   card.append(div1);
-
-    //   var div2 = $("<div class= 'card-body'>");
-    //   div2.append("Temp: " + results);
-    //   div2.append("Hmdty: " + humidity);
-    //   card.append(div2);
-
-    //   $("#five-day").append(card);
-
-    //   count = 0;
-    //   averageTemp = 0;
-    //   previousdate = currentDate;
-    // }
-    // }
   });
-}
+};
 
-function setNotesLocalStorage() {
+const setNotesLocalStorage = () => {
   var today = document.querySelector(".today").value;
   localStorage.setItem("today", today);
-  console.log(today);
   var day1 = document.querySelector(".day--1").value;
   localStorage.setItem("day-1", day1);
-  console.log(day1);
   var day2 = document.querySelector(".day--2").value;
   localStorage.setItem("day-2", day2);
-  console.log(day2);
   var day3 = document.querySelector(".day--3").value;
   localStorage.setItem("day-3", day3);
-  console.log(day3);
   var day4 = document.querySelector(".day--4").value;
   localStorage.setItem("day-4", day4);
-  console.log(day4);
   var day5 = document.querySelector(".day--5").value;
   localStorage.setItem("day-5", day5);
-  console.log(day5);
-}
+};
+
+const picturesSelection = (resDes) => {
+  if (resDes == "overcast clouds") {
+    document
+      .querySelector(".gallery__photo__1")
+      .setAttribute("src", "./img/overcast-clouds-1.jpeg");
+    document
+      .querySelector(".gallery__photo__2")
+      .setAttribute("src", "./img/overcast-clouds-2.jpeg");
+    document
+      .querySelector(".gallery__photo__3")
+      .setAttribute("src", "./img/overcast-clouds-3.jpeg");
+  } else if (resDes == "light rain") {
+    document
+      .querySelector(".gallery__photo__1")
+      .setAttribute("src", "./img/light-rain-1.jpeg");
+    document
+      .querySelector(".gallery__photo__2")
+      .setAttribute("src", "./img/light-rain-2.jpeg");
+    document
+      .querySelector(".gallery__photo__3")
+      .setAttribute("src", "./img/light-rain-3.jpeg");
+  } else if (resDes == "clear sky") {
+    document
+      .querySelector(".gallery__photo__1")
+      .setAttribute("src", "./img/clear-sky-1.jpeg");
+    document
+      .querySelector(".gallery__photo__2")
+      .setAttribute("src", "./img/clear-sky-2.jpeg");
+    document
+      .querySelector(".gallery__photo__3")
+      .setAttribute("src", "./img/clear-sky-3.jpeg");
+  } else if (resDes == "broken clouds" || resDes == "scattered clouds") {
+    document
+      .querySelector(".gallery__photo__1")
+      .setAttribute("src", "./img/scattered-clouds-1.jpeg");
+    document
+      .querySelector(".gallery__photo__2")
+      .setAttribute("src", "./img/scattered-clouds-2.jpeg");
+    document
+      .querySelector(".gallery__photo__3")
+      .setAttribute("src", "./img/scattered-clouds-3.jpeg");
+  } else if (resDes == "few clouds") {
+    document
+      .querySelector(".gallery__photo__1")
+      .setAttribute("src", "./img/few-clouds-1.jpeg");
+    document
+      .querySelector(".gallery__photo__2")
+      .setAttribute("src", "./img/few-clouds-2.jpeg");
+    document
+      .querySelector(".gallery__photo__3")
+      .setAttribute("src", "./img/few-clouds-3.jpeg");
+  }
+};
