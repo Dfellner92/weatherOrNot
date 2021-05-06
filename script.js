@@ -1,29 +1,34 @@
-let userInput;
+"use strict";
+
+// Initialization
 let latestSearch = localStorage.getItem("latest search");
+let userInput;
 let li = document.createElement("li");
-let count = 0;
-let d1 = 0;
+// Today
 let apiCall = "";
 let apiKey = "4e5dbe7db2b5e9c8b47fa40b691443d5";
 let currentConditions =
   "https://api.openweathermap.org/data/2.5/weather?appid=";
-let apiCall2 = "";
-let currentConditions2 = "https://api.openweathermap.org/data/2.5/uvi?appid=";
-let apiCall3 = "";
-let currentConditions3 = "https://api.openweathermap.org/data/2.5/forecast?q=";
-let date;
 let city;
+let lat;
+let lon;
+let date;
 let feelslike;
 let humidity;
 let wind;
-let lat;
-let lon;
-let temp2;
-
+// UVI
+let apiCall2 = "";
+let currentConditions2 = "https://api.openweathermap.org/data/2.5/uvi?appid=";
 let uvI;
 let uvIcolor;
-
-var svg = "";
+// Five Day
+let apiCall3 = "";
+let currentConditions3 = "https://api.openweathermap.org/data/2.5/forecast?q=";
+let temp2;
+let count = 0;
+let description;
+let futureDate = 0;
+let svg = "";
 
 document.addEventListener("DOMContentLoaded", function () {
   getWeather(latestSearch);
@@ -41,7 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
       userInput = document.querySelector(".search__input").value;
       localStorage.setItem("latest search", userInput);
-      var li = document.createElement("li");
       li.innerHTML = `<li class="past-searches__item">
       <a href="#" onClick="getWeather(this.innerHTML)" class="past-searches__link" >
         ${userInput}
@@ -120,14 +124,16 @@ const getFiveDay = (userInput) => {
   }).then(function (response) {
     count = 1;
 
-    for (i = 3; i < response.list.length; i += 8) {
+    for (let i = 3; i < response.list.length; i += 8) {
       temp2 = response.list[i].main.temp;
       temp2 = (temp2 - 273.15) * 1.8 + 32;
       temp2 = Math.floor(temp2);
-      var humidity = response.list[i].main.humidity;
+      //humidity = response.list[i].main.humidity;
       description = response.list[i].weather[0].description;
-      d1 = moment().add(count, "days").startOf("day").format("MM / DD / YYYY");
-
+      futureDate = moment()
+        .add(count, "days")
+        .startOf("day")
+        .format("MM / DD / YYYY");
       if (description === "clear sky") {
         svg = "light-up";
       } else if (
@@ -147,7 +153,7 @@ const getFiveDay = (userInput) => {
       document.querySelector(
         `.five-day__${i}`
       ).innerHTML = `<svg class="five-day__days--icon"><use xlink:href="img/sprite.svg#icon-${svg}"></use></svg>
-        ${d1}, ${temp2} °F, ${description}`;
+        ${futureDate}, ${temp2} °F, ${description}`;
       count++;
     }
   });
