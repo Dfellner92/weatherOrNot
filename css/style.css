@@ -313,7 +313,6 @@ body {
       width: 6rem;
       fill: var(--color-grey-dark-3); }
   .five-day__notes {
-    background-color: yellowgreen;
     flex: 1; }
     @media only screen and (max-width: 56.25em) {
       .five-day__notes {
